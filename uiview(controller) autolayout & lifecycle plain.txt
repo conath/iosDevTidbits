@@ -1,0 +1,22 @@
+UIViewController Lifecycle & AutoLayout
+(not using Storyboards)
+
+
+	1.	loadView(): well yes, load the darn view pretty please. (optional! don’t override unless necessary because you for some reason don’t want everything wrapped in a UIView) Don’t call super.loadView!! Never!
+	2.	viewDidLoad(): All variables have been initialized and you can start to set up the view hierarchy. Note that view.window is nil because we’re not on-screen yet! Do call super first thing!
+	3.	viewWillAppear(): About to become visible. Around this time viewWillLayoutSubviews() is called and after that updateConstraints() will be sent to all subviews. Use viewWillAppear to optionally (re)load data and viewWillLayoutSubviews to layout the views!  Do call super!
+	4.	viewDidAppear(): on-screen! Yay  Do call super!
+	5.	viewWillDisappear(): you guessed it: about to be removed from screen.  Do call super!
+
+UIView:
+
+	1.	init(frame:)
+	2.	intrinsicContentSize
+	3.	optionally override: updateConstraints (really why? idk)  Do call super last thing!
+	4.	draw(rect:) (only if needsDisplay==true)  Don’t call super obviously!
+UIView’s constraints will only be updated if there’s a need for it:
+	⁃	needsUpdateConstraints (set using [myView setNeedsUpdateConstraints];)
+	⁃	or when the view is first created
+	⁃	or when the view moves to a superview
+	⁃	or when the ViewController gets sent viewWillLayoutSubviews (which happens at arbitrary times & amounts, mostly when screen is rotated.)
+Likewise the draw(rect:) method isn’t called every frame for a UIView, only the first time it gets on screen & afterwards if you call [myView setNeedsDisplay]; (or the bounds change because of updated constraints 😉)
